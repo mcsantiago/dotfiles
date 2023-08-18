@@ -33,6 +33,14 @@ This script guides you through the following:
 
 Pretty convenient for configuring new servers.
 
+You will also need to install packer.nvim: (This sounds like an improvement for the install script)
+```
+git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+```
+
+Then run `:PackerSync` to get all the packages installed for nvim.
+
 # Sumary of Changes
 
 ## Basic runtime opperations 
