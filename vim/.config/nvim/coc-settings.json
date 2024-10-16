@@ -2,7 +2,7 @@
     "languageserver": {
         "ccls": {
             "command": "ccls",
-            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp", "tsx", "typescript", "javascript", "js", "jsx", "proto"],
+            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp", "proto"],
             "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
             "initializationOptions": {
                 "cache": {
@@ -15,6 +15,23 @@
             "rootPatterns": ["go.mod"],
             "trace.server": "verbose",
             "filetypes": ["go"]
+        },
+        "csharp-ls": {
+            "command": "csharp-ls",
+            "filetypes": ["cs"],
+            "rootPatterns": ["*.csproj", ".vim/", ".git/", ".hg/"],
+            "initializationOptions": {
+                "hostInfo": "neovim"
+            }
+        },
+        "coc-pyright": {
+            "pyright": {
+                "enable": true
+            },
+            "python": {
+                "pythonPath": "/usr/local/bin/python3",
+                "venvPath": ""
+            }
         }
     }
 }

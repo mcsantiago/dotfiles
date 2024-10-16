@@ -8,10 +8,13 @@ return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   use 'folke/tokyonight.nvim'
   use {'neoclide/coc.nvim', branch='release'}
-  use {'nvim-telescope/telescope.nvim', tag = '0.1.0',
+  use {'nvim-telescope/telescope.nvim', tag = '0.1.8',
       -- or                            , branch = '0.1.x',
        requires = { {'nvim-lua/plenary.nvim'} } }
   use 'github/copilot.vim'
+  use { 'junegunn/fzf', run = ":call fzf#install()" }
+  use { 'junegunn/fzf.vim' }
+
   -- For some reason Packer can't resolve the username or something... So I ran this instead
   -- git clone https://github.com/fatih/vim-go.git ~/.local/share/nvim/site/pack/plugins/start/vim-go
   -- use 'fatih/vim-go.nvim'
