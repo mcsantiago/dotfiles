@@ -63,6 +63,7 @@ echo "1. Check to make sure you have zsh, vim, and tmux installed"
 echo "2. We'll help you install them if you don't"
 echo "3. We're going to check to see if your default shell is zsh"
 echo "4. We'll try to change it if it's not" 
+echo "5. As a bonus you can also install pyenv to manage your python environments"
 
 echo "Let's get started? (y/n)"
 old_stty_cfg=$(stty -g)
@@ -79,7 +80,7 @@ fi
 
 check_for_software zsh
 echo 
-check_for_software neovim
+check_for_software nvim 
 echo
 check_for_software tmux
 echo
@@ -95,13 +96,38 @@ stty $old_stty_cfg
 if echo "$answer" | grep -iq "^y" ;then
 	mv ~/.zshrc ~/.zshrc.old
 	mv ~/.tmux.conf ~/.tmux.conf.old
-	#mv ~/.vimrc ~/.vimrc.old
+	mv ~/.vimrc ~/.vimrc.old
 else
 	echo -e "\nNot backing up old dotfiles."
 fi
 
+echo
+echo -n "Would you also like to check for pyenv? (y/n)"
+old_stty_cfg=$(stty -g)
+stty raw -echo
+answer=$( while ! head -c 1 | grep -i '[ny]' ;do true ;done )
+stty $old_stty_cfg
+if echo "$answer" | grep -iq "^y" ;then
+    if [ "$(uname)" = "Darwin" ] && [ -x "$(command -v brew)" ]; then
+        brew update
+        brew install pyenv
+        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+        echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+        echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+        echo "Sweet, pyenv should be good to go."
+    elif [ "$(uname)" = "Linux" ] && [ -x "$(command -v apt)" ]; then
+        curl https://pyenv.run | bash
+        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+        echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+        echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+        echo "Sweet, pyenv should be good to go."
+    else
+        echo -e "\nUnable to detect environment. No changes made."
+    fi
+fi
+
 printf "source '$HOME/dotfiles/zsh/zshrc_manager.sh'" > ~/.zshrc
-#printf "so $HOME/dotfiles/vim/vimrc.vim" > ~/.vimrc
+printf "so $HOME/dotfiles/vim/vimrc.vim" > ~/.vimrc
 printf "source-file $HOME/dotfiles/tmux/tmux.conf" > ~/.tmux.conf
 
 echo
