@@ -9,8 +9,12 @@ set_prompt() {
 	# [
 	PS1="%{$fg[white]%}[%{$reset_color%}"
 
+    # Arch
+    PS1+="%{$fg[green]%}\$(arch)%{$reset_color%} "
+
 	# Path: http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/
 	PS1+="%{$fg_bold[cyan]%}${PWD/#$HOME/~}%{$reset_color%}"
+
 
 	# Status Code
 	PS1+='%(?.., %{$fg[red]%}%?%{$reset_color%})'
