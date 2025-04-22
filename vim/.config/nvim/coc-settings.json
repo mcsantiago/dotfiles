@@ -1,4 +1,12 @@
 {
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportIncompatibleMethodOverride": "warning",
+        "reportUnusedVariable": true,
+        "reportUnusedFunctionArgument": "relaxed"
+    },
+    "pyright": {
+        "enable": true
+    },
     "languageserver": {
         "ccls": {
             "command": "ccls",
@@ -22,15 +30,6 @@
             "rootPatterns": ["*.csproj", ".vim/", ".git/", ".hg/"],
             "initializationOptions": {
                 "hostInfo": "neovim"
-            }
-        },
-        "coc-pyright": {
-            "pyright": {
-                "enable": true
-            },
-            "python": {
-                "pythonPath": "/usr/local/bin/python3",
-                "venvPath": ""
             }
         }
     }

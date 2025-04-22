@@ -192,3 +192,4 @@ keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 
 -- Vimspector Settings
 vim.g.vimspector_enable_mappings = 'HUMAN'
+
