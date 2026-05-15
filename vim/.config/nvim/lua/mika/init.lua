@@ -187,4 +187,41 @@ keyset("n", "<space>j", ":<C-u>CocNext<cr>", opts)
 -- Do default action for previous item
 keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
 -- Resume latest coc list
-keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
+--keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
+
+
+-- Vimspector Settings
+vim.g.vimspector_enable_mappings = 'HUMAN'
+
+vim.keymap.set("n", "<leader>r", function()
+  -- Unload user modules (adjust prefixes to match your config)
+  for name, _ in pairs(package.loaded) do
+    if name:match("^mika") or name:match("^plugins") or name:match("^config") then
+      package.loaded[name] = nil
+    end
+  end
+
+  -- Reload init.lua
+  vim.cmd("source $MYVIMRC")
+
+  -- Recompile packer-managed plugins
+  vim.cmd("PackerCompile")
+
+  -- Restart LSP clients
+  for _, client in pairs(vim.lsp.get_active_clients()) do
+    client.stop()
+  end
+
+  vim.defer_fn(function()
+    local ok, lsp = pcall(require, "mika.lsp")
+    if ok and lsp.setup then
+      lsp.setup()
+    end
+  end, 100)
+
+  -- Reapply colorscheme
+  vim.cmd("colorscheme tokyonight")  -- Change this if needed
+
+  print("✅ Config reloaded and packer plugins recompiled.")
+end, { desc = "Reload full config & plugins" })
+

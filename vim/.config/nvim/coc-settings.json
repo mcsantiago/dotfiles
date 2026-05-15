@@ -1,8 +1,16 @@
 {
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportIncompatibleMethodOverride": "warning",
+        "reportUnusedVariable": true,
+        "reportUnusedFunctionArgument": "relaxed"
+    },
+    "pyright": {
+        "enable": true
+    },
     "languageserver": {
         "ccls": {
             "command": "ccls",
-            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp", "tsx", "typescript", "javascript", "js", "jsx", "proto"],
+            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp", "proto"],
             "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
             "initializationOptions": {
                 "cache": {
@@ -15,6 +23,14 @@
             "rootPatterns": ["go.mod"],
             "trace.server": "verbose",
             "filetypes": ["go"]
+        },
+        "csharp-ls": {
+            "command": "csharp-ls",
+            "filetypes": ["cs"],
+            "rootPatterns": ["*.csproj", ".vim/", ".git/", ".hg/"],
+            "initializationOptions": {
+                "hostInfo": "neovim"
+            }
         }
     }
 }
