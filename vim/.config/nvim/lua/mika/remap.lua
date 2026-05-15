@@ -13,6 +13,7 @@ nnoremap("<leader>fg", "<cmd>Telescope live_grep<Cr>")
 nnoremap("<leader>fb", "<cmd>Telescope buffers<Cr>")
 nnoremap("<leader>fh", "<cmd>Telescope help_tags<Cr>")
 
+-- Copy to clipboard
 vnoremap("<leader>c", '"+y')
 
 -- Python-specific commenting and uncommenting
