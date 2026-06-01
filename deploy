@@ -158,7 +158,7 @@ if echo "$answer" | grep -iq "^y" ;then
     jq --arg s "$script" '
         .hooks.Stop = [ { "hooks": [ { "type":"command", "command": ($s + " done") } ] } ]
       | .hooks.Notification = [ { "hooks": [ { "type":"command", "command": ($s + " waiting") } ] } ]
-      | .hooks.UserPromptSubmit = [ { "hooks": [ { "type":"command", "command": ($s + " reset") } ] } ]
+      | .hooks.UserPromptSubmit = [ { "hooks": [ { "type":"command", "command": ($s + " generating") } ] } ]
     ' "$settings" > "$tmp" && mv "$tmp" "$settings"
     echo "Claude Code tmux notifier wired into $settings (restart Claude sessions to load)."
 fi
