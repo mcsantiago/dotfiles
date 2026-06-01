@@ -140,6 +140,29 @@ if echo "$answer" | grep -iq "^y" ;then
     fi
 fi
 
+echo
+echo -n "Would you like to wire up the Claude Code tmux notifier? (y/n) "
+old_stty_cfg=$(stty -g)
+stty raw -echo
+answer=$( while ! head -c 1 | grep -i '[ny]' ;do true ;done )
+stty $old_stty_cfg && echo
+if echo "$answer" | grep -iq "^y" ;then
+    check_for_software jq
+    chmod +x "$HOME/dotfiles/tmux/claude-notify.sh"
+    settings="$HOME/.claude/settings.json"
+    script="$HOME/dotfiles/tmux/claude-notify.sh"
+    mkdir -p "$HOME/.claude"
+    [ -f "$settings" ] || echo '{}' > "$settings"
+    tmp=$(mktemp)
+    # Idempotent: (re)set the three notifier hooks, preserve everything else.
+    jq --arg s "$script" '
+        .hooks.Stop = [ { "hooks": [ { "type":"command", "command": ($s + " done") } ] } ]
+      | .hooks.Notification = [ { "hooks": [ { "type":"command", "command": ($s + " waiting") } ] } ]
+      | .hooks.UserPromptSubmit = [ { "hooks": [ { "type":"command", "command": ($s + " reset") } ] } ]
+    ' "$settings" > "$tmp" && mv "$tmp" "$settings"
+    echo "Claude Code tmux notifier wired into $settings (restart Claude sessions to load)."
+fi
+
 printf "source '$HOME/dotfiles/zsh/zshrc_manager.sh'" > ~/.zshrc
 printf "so $HOME/dotfiles/vim/vimrc.vim" > ~/.vimrc
 printf "source-file $HOME/dotfiles/tmux/tmux.conf" > ~/.tmux.conf
