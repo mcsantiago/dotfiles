@@ -23,14 +23,14 @@ target="$TMUX_PANE"
 
 case "$state" in
   done)
-    # yellow bg, black fg — finished, needs your attention
-    tmux set-window-option -t "$target" window-status-style       'fg=colour0,bg=colour220' 2>/dev/null || true
-    tmux set-window-option -t "$target" window-status-current-style 'fg=colour0,bg=colour220' 2>/dev/null || true
+    # dark green bg, white fg — turn finished, your move (done or asked)
+    tmux set-window-option -t "$target" window-status-style       'fg=colour15,bg=colour22' 2>/dev/null || true
+    tmux set-window-option -t "$target" window-status-current-style 'fg=colour15,bg=colour22' 2>/dev/null || true
     ;;
   waiting)
-    # red bg, white fg — blocked on your input
-    tmux set-window-option -t "$target" window-status-style       'fg=colour15,bg=colour160' 2>/dev/null || true
-    tmux set-window-option -t "$target" window-status-current-style 'fg=colour15,bg=colour160' 2>/dev/null || true
+    # amber bg, black fg — blocked on permission / idle, act now
+    tmux set-window-option -t "$target" window-status-style       'fg=colour0,bg=colour214' 2>/dev/null || true
+    tmux set-window-option -t "$target" window-status-current-style 'fg=colour0,bg=colour214' 2>/dev/null || true
     ;;
   reset)
     # drop the per-window override -> fall back to tmux.conf defaults
