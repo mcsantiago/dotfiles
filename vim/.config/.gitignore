@@ -1,3 +1,11 @@
 nvim/plugin/
 coc/
 github-copilot/
+.wrangler/
+configstore/
+cursor/
+gh/
+homebrew/
+ngrok/
+nvm/
+uv/
