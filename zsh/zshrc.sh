@@ -5,13 +5,15 @@
 	setopt share_history # setopt inc_append_history
 
 # Aliases
+	alias vim="nvim"
+	alias vi="nvim"
 	alias v="vim -p"
 	
 	# This is currently causing problems (fails when you run it anywhere that isn't a git project's root directory)
 	# alias vs="v `git status --porcelain | sed -ne 's/^ M //p'`"
 
 # Settings
-	export VISUAL=vim
+	export VISUAL=nvim
 	export XDG_CONFIG_HOME=~/dotfiles/vim/.config/
 	export PATH=~/bin/:$PATH
 

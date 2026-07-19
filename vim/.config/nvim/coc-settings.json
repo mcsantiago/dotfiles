@@ -31,6 +31,28 @@
             "initializationOptions": {
                 "hostInfo": "neovim"
             }
+        },
+        "rust_analyzer": {
+            "command": "rust-analyzer",
+            "filetypes": ["rust"],
+            "rootPatterns": ["Cargo.toml", "rust-project.json"],
+            "trace.server": "verbose",
+            "settings": {
+                "rust-analyzer": {}
+            }
+        },
+        "zig": {
+            "enabled": true,
+            "startUpMessage": true,
+            "path": "zls",
+            "debugLog": false
+        },
+        "gdscript": {
+            "command": "/Applications/Godot 2.app/Contents/MacOS/Godot",
+            "args": ["--headless", "--editor", "--lsp"],
+            "filetypes": ["gdscript"],
+            "rootPatterns": ["project.godot"],
+            "trace.server": "verbose"
         }
     }
 }
