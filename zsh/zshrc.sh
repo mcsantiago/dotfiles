@@ -17,6 +17,11 @@
 	export XDG_CONFIG_HOME=~/dotfiles/vim/.config/
 	export PATH=~/bin/:$PATH
 
+# nvm (Node version manager) — provides `node`/`npm` on PATH, incl. for coc.nvim
+	export NVM_DIR="$HOME/.nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+	[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+
 source ~/dotfiles/zsh/plugins/fixls.zsh
 
 #Functions
