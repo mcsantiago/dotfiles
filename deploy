@@ -22,8 +22,12 @@ prompt_install() {
                 git clone --branch release-0.11 git@github.com:neovim/neovim.git
                 cd neovim
                 git checkout stable
-                # Use Unix Makefiles to avoid ninja path issues
-                make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_GENERATOR="Unix Makefiles" CMAKE_INSTALL_PREFIX=/usr
+                # Build with the default Ninja generator (ninja-build is installed
+                # above). The old CMAKE_GENERATOR="Unix Makefiles" broke here:
+                # neovim's Makefile re-expands it unquoted, so cmake received
+                # "-G Unix" and failed with "Could not create named generator Unix".
+                # Ninja is what actually built successfully. Installs to /usr/local.
+                make CMAKE_BUILD_TYPE=RelWithDebInfo
                 sudo make install
                 cd ..
                 sudo rm -rf neovim
