@@ -8,9 +8,10 @@ prompt_install() {
         # Map command name -> distro package name where they differ
         # (e.g. the `nvim` binary is provided by the `neovim` package everywhere)
         pkg="$1"
-        if [ "$1" = "nvim" ]; then
-            pkg="neovim"
-        fi
+        case "$1" in
+            nvim) pkg="neovim" ;;   # provided by the neovim package on every manager
+            node) pkg="nodejs" ;;   # apt/pacman name; brew/pkg override to "node" below
+        esac
         # This could def use community support
         if [ "$(uname)" = "Linux" ] && [ -x "$(command -v apt)" ]; then
             if [ "$1" = "nvim" ]; then
@@ -31,9 +32,10 @@ prompt_install() {
             fi
 
         elif [ "$(uname)" = "Darwin" ] && [ -x "$(command -v brew)" ]; then
+            [ "$1" = "node" ] && pkg="node"   # Homebrew formula is 'node'
             # Determine machine's architecture
             arch_name="$(uname -m)"
-            
+
             # If architecture is ARM, install from source
             if [ "${arch_name}" = "arm64" ]; then
                 brew install --build-from-source $pkg
@@ -42,6 +44,7 @@ prompt_install() {
             fi
 
         elif [ "$(uname)" = "FreeBSD" ] && [ -x "$(command -v pkg)" ]; then
+            [ "$1" = "node" ] && pkg="node"   # FreeBSD pkg is 'node'
             sudo pkg install $pkg
 
         elif [ "$(uname)" = "Linux" ] && [ -x "$(command -v pacman)" ]; then
@@ -72,7 +75,12 @@ check_default_shell() {
 		answer=$( while ! head -c 1 | grep -i '[ny]' ;do true ;done )
 		stty $old_stty_cfg && echo
 		if echo "$answer" | grep -iq "^y" ;then
-			chsh -s $(which zsh)
+			if chsh -s "$(which zsh)" ;then
+				echo "Default shell changed to zsh (takes effect on next login)."
+			else
+				echo "Warning: chsh failed — your login shell is still $(getent passwd "$USER" | cut -d: -f7)."
+				echo "         zsh config won't load until your login shell is zsh. Retry with: chsh -s \$(which zsh)"
+			fi
 		else
 			echo "Warning: Your configuration won't work properly. If you exec zsh, it'll exec tmux which will exec your default shell which isn't zsh."
 		fi
@@ -92,16 +100,23 @@ stty raw -echo
 answer=$( while ! head -c 1 | grep -i '[ny]' ;do true ;done )
 stty $old_stty_cfg
 if echo "$answer" | grep -iq "^y" ;then
-	echo 
+	echo
 else
 	echo "Quitting, nothing was changed."
 	exit 0
 fi
 
+# Check out the zsh plugin submodules (oh-my-zsh, autosuggestions, syntax-highlighting).
+# Without this the shell config sources files that don't exist and startup breaks.
+echo "Fetching zsh plugin submodules..."
+git -C "$HOME/dotfiles" submodule update --init --recursive
+
 
 check_for_software zsh
 echo 
-check_for_software nvim 
+check_for_software nvim
+echo
+check_for_software node   # required by coc.nvim (the neovim LSP/completion layer)
 echo
 check_for_software tmux
 echo
@@ -176,3 +191,9 @@ printf "source-file $HOME/dotfiles/tmux/tmux.conf" > ~/.tmux.conf
 
 echo
 echo "Please log out and log back in for default shell to be initialized."
+
+# Activate the new config in this session now, instead of requiring a re-login.
+# Reads ~/.zshrc -> zshrc_manager.sh (-> exec tmux -> zsh -> zshrc.sh).
+if command -v zsh >/dev/null; then
+	exec zsh -l
+fi
