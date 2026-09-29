@@ -5,12 +5,19 @@ prompt_install() {
     answer=$( while ! head -c 1 | grep -i '[ny]' ;do true ;done )
     stty $old_stty_cfg && echo
     if echo "$answer" | grep -iq "^y" ;then
+        # Map command name -> distro package name where they differ
+        # (e.g. the `nvim` binary is provided by the `neovim` package everywhere)
+        pkg="$1"
+        if [ "$1" = "nvim" ]; then
+            pkg="neovim"
+        fi
         # This could def use community support
         if [ "$(uname)" = "Linux" ] && [ -x "$(command -v apt)" ]; then
-            if [ "$1" = "neovim" ]; then
+            if [ "$1" = "nvim" ]; then
                 # Install latest neovim from source
                 sudo apt install -y build-essential cmake gettext libtool libtool-bin autoconf automake pkg-config unzip curl doxygen ninja-build
                 cd /tmp
+                rm -rf /tmp/neovim
                 git clone --branch release-0.11 git@github.com:neovim/neovim.git
                 cd neovim
                 git checkout stable
@@ -20,7 +27,7 @@ prompt_install() {
                 cd ..
                 sudo rm -rf neovim
             else
-                sudo apt install $1 -y
+                sudo apt install $pkg -y
             fi
 
         elif [ "$(uname)" = "Darwin" ] && [ -x "$(command -v brew)" ]; then
@@ -29,16 +36,16 @@ prompt_install() {
             
             # If architecture is ARM, install from source
             if [ "${arch_name}" = "arm64" ]; then
-                brew install --build-from-source $1
+                brew install --build-from-source $pkg
             else
-                brew install $1
+                brew install $pkg
             fi
 
         elif [ "$(uname)" = "FreeBSD" ] && [ -x "$(command -v pkg)" ]; then
-            sudo pkg install $1
+            sudo pkg install $pkg
 
         elif [ "$(uname)" = "Linux" ] && [ -x "$(command -v pacman)" ]; then
-            sudo pacman -S $1
+            sudo pacman -S $pkg
 
         else
             echo "I'm not sure what your package manager is! Please install $1 on your own and run this deploy script again. Tests for package managers are in the deploy script you just ran starting at line 13. Feel free to make a pull request at https://github.com/parth/dotfiles :)"
