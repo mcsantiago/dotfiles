@@ -1,3 +1,4 @@
+pcall(require, "mika.tools")  -- bootstrap CLI deps (ripgrep) if missing
 require("mika.plugins")
 require("mika.set")
 require("mika.remap")
