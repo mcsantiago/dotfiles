@@ -11,6 +11,7 @@ prompt_install() {
         case "$1" in
             nvim) pkg="neovim" ;;   # provided by the neovim package on every manager
             node) pkg="nodejs" ;;   # apt/pacman name; brew/pkg override to "node" below
+            wl-copy) pkg="wl-clipboard" ;;
         esac
         # This could def use community support
         if [ "$(uname)" = "Linux" ] && [ -x "$(command -v apt)" ]; then
@@ -123,6 +124,16 @@ echo
 check_for_software node   # required by coc.nvim (the neovim LSP/completion layer)
 echo
 check_for_software tmux
+
+# tmux copies selections to the system clipboard through wl-copy (Wayland) or xclip (X11)
+if [ "$(uname)" = "Linux" ]; then
+	echo
+	if [ -n "$WAYLAND_DISPLAY" ]; then
+		check_for_software wl-copy
+	else
+		check_for_software xclip
+	fi
+fi
 echo
 
 check_default_shell
